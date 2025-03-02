@@ -26,18 +26,21 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 lat = 55.7522
 lon = 37.6156
-print("000")
+
 with open("mean.pkl", "rb") as f:
     M = pickle.load(f)
 
 with open("square.pkl", "rb") as f:
     S = pickle.load(f)
-print("111")
+
 model = WeatherPredictor(5, 50)
+print("000")
 model.load_state_dict(torch.load("weather_predictor.pth"))
+print("111")
 model.eval() 
-model.to(device)
 print("222")
+model.to(device)
+
 app = FastAPI()
 
 def weather_request():
