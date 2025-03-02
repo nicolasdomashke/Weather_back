@@ -85,3 +85,7 @@ async def gen_pred():
         return {"status": "success", "data": pred}
     else:
         return {"status": "error"} 
+
+@app.get("/test")
+async def test_reply():
+    return {"status": "success"}
