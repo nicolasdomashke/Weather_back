@@ -3,7 +3,7 @@ import datetime
 import torch
 import torch.nn as nn
 import pickle
-#import numpy as np
+import numpy as np
 from fastapi import FastAPI
 #from fastapi.responses import Response
 #from pydantic import BaseModel
