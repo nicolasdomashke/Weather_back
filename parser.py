@@ -22,6 +22,7 @@ class WeatherPredictor(nn.Module):
         return fc_out
 
 API_KEY = '15bb7791d0e66c74ab77adf25b1961a7'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 lat = 55.7522
 lon = 37.6156
@@ -35,7 +36,7 @@ with open("square.pkl", "rb") as f:
 model = WeatherPredictor(5, 50)
 model.load_state_dict(torch.load("weather_predictor.pth"))
 model.eval() 
-#model.to("cuda")
+model.to(device)
 
 app = FastAPI()
 
@@ -65,7 +66,7 @@ def weather_request():
 
 def weather_pred(X):
     X_tensor = torch.tensor(X, dtype=torch.float32).unsqueeze(0)
-    #X_tensor = X_tensor.to("cuda")
+    X_tensor = X_tensor.to(device)
     with torch.no_grad():
         y = model(X_tensor)
     y = y.squeeze(0).cpu().numpy()
