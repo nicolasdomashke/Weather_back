@@ -35,11 +35,11 @@ with open("square.pkl", "rb") as f:
 
 model = WeatherPredictor(5, 50)
 print("000")
-model.load_state_dict(torch.load("weather_predictor.pth"))
+model.load_state_dict(torch.load("weather_predictor.pth"), map_location=torch.device('cpu'))
 print("111")
 model.eval() 
 print("222")
-model.to(device)
+#model.to(device)
 
 app = FastAPI()
 
@@ -69,7 +69,7 @@ def weather_request():
 
 def weather_pred(X):
     X_tensor = torch.tensor(X, dtype=torch.float32).unsqueeze(0)
-    X_tensor = X_tensor.to(device)
+    #X_tensor = X_tensor.to(device)
     with torch.no_grad():
         y = model(X_tensor)
     y = y.squeeze(0).cpu().numpy()
