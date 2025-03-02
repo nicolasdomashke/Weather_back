@@ -3,10 +3,23 @@ import datetime
 import torch
 import torch.nn as nn
 import pickle
-import numpy as np
+#import numpy as np
 from fastapi import FastAPI
-from fastapi.responses import Response
-from pydantic import BaseModel
+#from fastapi.responses import Response
+#from pydantic import BaseModel
+
+class WeatherPredictor(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers=1):
+        super(WeatherPredictor, self).__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_size, 4 * input_size)
+    
+    def forward(self, x):
+        out, _ = self.lstm(x)
+        last_hidden = out[:, -1, :]
+        fc_out = self.fc(last_hidden)
+        fc_out = fc_out.view(-1, 4, x.size(2))
+        return fc_out
 
 API_KEY = '15bb7791d0e66c74ab77adf25b1961a7'
 
@@ -22,22 +35,9 @@ with open("square.pkl", "rb") as f:
 model = WeatherPredictor(5, 50)
 model.load_state_dict(torch.load("weather_predictor.pth"))
 model.eval() 
-model.to("cuda")
+#model.to("cuda")
 
 app = FastAPI()
-
-class WeatherPredictor(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers=1):
-        super(WeatherPredictor, self).__init__()
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_size, 4 * input_size)
-    
-    def forward(self, x):
-        out, _ = self.lstm(x)
-        last_hidden = out[:, -1, :]
-        fc_out = self.fc(last_hidden)
-        fc_out = fc_out.view(-1, 4, x.size(2))
-        return fc_out
 
 def weather_request():
     X = []
@@ -65,7 +65,7 @@ def weather_request():
 
 def weather_pred(X):
     X_tensor = torch.tensor(X, dtype=torch.float32).unsqueeze(0)
-    X_tensor = X_tensor.to("cuda")
+    #X_tensor = X_tensor.to("cuda")
     with torch.no_grad():
         y = model(X_tensor)
     y = y.squeeze(0).cpu().numpy()
