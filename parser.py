@@ -35,7 +35,7 @@ with open("square.pkl", "rb") as f:
 
 model = WeatherPredictor(5, 50)
 print("000")
-model.load_state_dict(torch.load("weather_predictor.pth"), map_location=torch.device('cpu'))
+model.load_state_dict(torch.load("weather_predictor.pth", map_location=torch.device('cpu')))
 print("111")
 model.eval() 
 print("222")
