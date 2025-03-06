@@ -58,7 +58,7 @@ model.eval()
 #model.to(device)
 
 model2 = WeatherClassifier(4, 64, 5)
-model2.load_state_dict(torch.load("weather_classifier.pth"))
+model2.load_state_dict(torch.load("weather_classifier.pth", map_location=torch.device('cpu')))
 model2.eval() 
 #model2.to(device)
 
@@ -105,7 +105,7 @@ def weather_pred(X):
     X_tensor = torch.tensor(X, dtype=torch.float32).unsqueeze(0)
     #X_tensor = X_tensor.to(device)
     with torch.no_grad():
-        y = model(X_tensor)
+        y = model2(X_tensor)
     y = y.squeeze(0).cpu().numpy()
     y = [[vector[i] * S[i] + M[i] - (273 if i == 2 else 0) for i in range(5)] for vector in y]
     return y
