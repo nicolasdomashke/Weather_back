@@ -116,7 +116,7 @@ def weather_class(X):
     with torch.no_grad():
         outputs = model2(X_tensor)
         _, y = torch.max(outputs, 1)
-    return y
+    return outputs
 
 @app.get("/prediction")
 async def gen_pred():
