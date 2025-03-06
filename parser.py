@@ -5,6 +5,7 @@ import torch.nn as nn
 import pickle
 import numpy as np
 from fastapi import FastAPI
+from sklearn.preprocessing import LabelEncoder
 #from fastapi.responses import Response
 #from pydantic import BaseModel
 
