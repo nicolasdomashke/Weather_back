@@ -105,7 +105,7 @@ def weather_pred(X):
     X_tensor = torch.tensor(X, dtype=torch.float32).unsqueeze(0)
     #X_tensor = X_tensor.to(device)
     with torch.no_grad():
-        y = model2(X_tensor)
+        y = model(X_tensor)
     y = y.squeeze(0).cpu().numpy()
     y = [[vector[i] * S[i] + M[i] - (273 if i == 2 else 0) for i in range(5)] for vector in y]
     return y
@@ -114,7 +114,7 @@ def weather_class(X):
     X_tensor = torch.tensor(X, dtype=torch.float32).unsqueeze(0)
     #X_tensor = X_tensor.to(device)
     with torch.no_grad():
-        outputs = model(X_tensor)
+        outputs = model2(X_tensor)
         _, y = torch.max(outputs, 1)
     return y
 
@@ -134,7 +134,7 @@ async def gen_pred():
             wind_avr += historical_data[i][4]
         wind_avr /= 16
         weather_type = weather_class([(precipitation - M2[0]) / S2[0], (max_temp - M2[1]) / S2[1], (min_temp + 273 - M2[2]) / S2[2], (wind_avr - M2[3]) / S2[3]])
-
+        print([(precipitation - M2[0]) / S2[0], (max_temp - M2[1]) / S2[1], (min_temp + 273 - M2[2]) / S2[2], (wind_avr - M2[3]) / S2[3]])
         return {"status": "success", "data": pred, "type": weather_type}
     else:
         return {"status": "error"} 
