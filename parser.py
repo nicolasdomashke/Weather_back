@@ -62,6 +62,9 @@ model2.load_state_dict(torch.load("weather_classifier.pth", map_location=torch.d
 model2.eval() 
 #model2.to(device)
 
+with open("encoder.pkl", "rb") as f:
+    loaded_encoder = pickle.load(f)
+
 app = FastAPI()
 
 def weather_request():
@@ -116,7 +119,11 @@ def weather_class(X):
     with torch.no_grad():
         outputs = model2(X_tensor)
         _, y = torch.max(outputs, 1)
-    return outputs
+    pred_label = y.item()
+
+    pred_label = loaded_encoder.inverse_transform([pred_label])[0]
+    
+    return pred_label
 
 @app.get("/prediction")
 async def gen_pred():
