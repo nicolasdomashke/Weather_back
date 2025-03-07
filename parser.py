@@ -38,9 +38,6 @@ class WeatherClassifier(nn.Module):
 API_KEY = '15bb7791d0e66c74ab77adf25b1961a7'
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-lat = 55.7522
-lon = 37.6156
-
 with open("mean.pkl", "rb") as f:
     M = pickle.load(f)
 
@@ -68,7 +65,7 @@ with open("encoder.pkl", "rb") as f:
 
 app = FastAPI()
 
-def weather_request():
+def weather_request(lat, lon):
     X = []
     for i in range(12):
         dt = int((datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=i)).timestamp())
@@ -92,7 +89,7 @@ def weather_request():
     X.reverse()
     return X
 
-def get_precipitation():
+def get_precipitation(lat, lon):
     url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
     response = requests.get(url)
     data = response.json()
@@ -127,11 +124,11 @@ def weather_class(X):
     return pred_label
 
 @app.get("/prediction")
-async def gen_pred():
-    historical_data = weather_request()
+async def gen_pred(lat: float, lon: float):
+    historical_data = weather_request(lat, lon)
     if historical_data:
         pred = weather_pred(historical_data)
-        precipitation = get_precipitation()
+        precipitation = get_precipitation(lat, lon)
         historical_data.extend(pred)
         min_temp = float("inf")
         max_temp = -float("inf")
