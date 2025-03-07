@@ -139,7 +139,6 @@ async def gen_pred(lat: float, lon: float):
             wind_avr += historical_data[i][4]
         wind_avr /= 16
         weather_type = weather_class([(precipitation - M2[0]) / S2[0], (max_temp - M2[1]) / S2[1], (min_temp + 273 - M2[2]) / S2[2], (wind_avr - M2[3]) / S2[3]])
-        print(weather_type)
         return {"status": "success", "data": pred, "type": weather_type}
     else:
         return {"status": "error"} 
