@@ -40,7 +40,7 @@ class WeatherClassifier(nn.Module):
         return x
     
 class SimpleCNN(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes=5):
         super(SimpleCNN, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm2d(32)
@@ -91,7 +91,7 @@ model2.load_state_dict(torch.load("weather_classifier.pth", map_location=torch.d
 model2.eval() 
 #model2.to(device)
 
-model3 = torch.load("new.pth", map_location=device, weights_only=False)
+model3 = torch.load("new.pth", map_location=torch.device('cpu'), weights_only=False)
 model3.eval()
 
 with open("encoder.pkl", "rb") as f:
