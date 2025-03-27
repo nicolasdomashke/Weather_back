@@ -40,7 +40,7 @@ class WeatherClassifier(nn.Module):
         return x
     
 class SimpleCNN(nn.Module):
-    def __init__(self, num_classes=5):
+    def __init__(self, num_classes):
         super(SimpleCNN, self).__init__()
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
         self.bn1 = nn.BatchNorm2d(32)
@@ -82,16 +82,17 @@ with open("square2.pkl", "rb") as f:
     S2 = pickle.load(f)
 
 model = WeatherPredictor(5, 50)
-model.load_state_dict(torch.load("weather_predictor.pth", map_location=torch.device('cpu')))
+model.load_state_dict(torch.load("weather_predictor.pth", map_location=device))
 model.eval() 
 #model.to(device)
 
 model2 = WeatherClassifier(4, 64, 5)
-model2.load_state_dict(torch.load("weather_classifier.pth", map_location=torch.device('cpu')))
+model2.load_state_dict(torch.load("weather_classifier.pth", map_location=device))
 model2.eval() 
 #model2.to(device)
 
-model3 = torch.load("new.pth", map_location=torch.device('cpu'), weights_only=False)
+model3 = SimpleCNN(5)
+model3.load_state_dict(torch.load("new.pth", map_location=device))
 model3.eval()
 
 with open("encoder.pkl", "rb") as f:
