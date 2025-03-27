@@ -197,7 +197,7 @@ def recog_image():
 
     input_tensor = input_tensor.unsqueeze(0).to(device)
     with torch.no_grad():
-        outputs = model(input_tensor)
+        outputs = model3(input_tensor)
 
         _, predicted = torch.max(outputs, 1)
         predicted_class = predicted.item()
